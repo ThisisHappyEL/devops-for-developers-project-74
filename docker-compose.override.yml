@@ -3,12 +3,22 @@ services:
     build:
       context: .
       dockerfile: Dockerfile
+    environment:
+      - NODE_ENV=development
     volumes:
       - ./app:/app
       - node_modules:/app/node_modules
-    ports:
-      - "8080:8080"
     command: make dev
+
+  caddy:
+    image: caddy:2.7.6
+    ports:
+      - "80:80"
+      - "443:443"
+    volumes:
+      - ./services/caddy/Caddyfile:/etc/caddy/Caddyfile
+    depends_on:
+      - app
 
 volumes:
   node_modules:
